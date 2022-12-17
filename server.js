@@ -6,7 +6,7 @@ const server = http.createServer((req, res) => { //it creates the server but res
   // res.write("<h1>hello world</h1>");
   // res.write("<h2>Bang bang</h>");
   // res.end("res end");
-  const path = './views'
+  let path = './views';
   switch (req.url) {
     case '/':
       path += '/index.html';
@@ -21,7 +21,7 @@ const server = http.createServer((req, res) => { //it creates the server but res
       res.setHeader('Location','/about');
       res.end();//agar ye nhi krte to loop hota rehta baar baar reload hota
       break;
-    default :
+    default:
       path += '404.html';
       res.statusCode = 404;
       break;
