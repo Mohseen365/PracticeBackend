@@ -23,8 +23,8 @@ app.get('/aboutus', (req, res) => {
   res.redirect('/about');
 })
 
-app.use((req, res) => {
-  res.status(404).sendFile("./views/404.html", {root: __dirname});
+app.use((req, res) => { //app.use hamesha chalta he aur isse sabse last me likho error ke case me
+  res.status(404).sendFile("./views/404.html", {root: __dirname}); // res.fun1().fun2() this is called chaining
 })
 
 app.listen(3000, () => {
