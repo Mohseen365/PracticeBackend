@@ -1,7 +1,7 @@
 const express = require("express"); //baar baar start krne ke liye command daalne ki jrurat nhi he apne aap save ho jata he unlike in node
 const app = express();
 
-app.get("/", function (req, res) {
+app.get("/", function (req, res) { //agar frontend se get request aayi aur rout match ho gya to ye chalega
   res.send("<h1> Hello World </h1>"); //header status code sab yhi set kr deta he
 });
 
