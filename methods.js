@@ -1,7 +1,23 @@
 const express = require('express');
 const app = express();
 app.use(express.json());// isse use krna padta he post req ko chalane ke liye
-user = {};
+users = [
+  {
+    id: 1,
+    name: "Mohseen",
+    age: 24
+  },
+  {
+    id: 2,
+    name: "Ansari",
+    age: 25
+  },
+  {
+    id: 1,
+    name: "Ani",
+    age: 17
+  }
+];
 
 app.get('/user', (req, res) => {
   res.send(user);
