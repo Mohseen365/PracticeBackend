@@ -20,6 +20,19 @@ users = [
   }
 ];
 
+// We will use mounting which will me created for each route (mini app)
+const userRouter = express.Router(); //we use this so that we can use function for get,post,etc
+app.use('/user',userRouter);//no need to add localhost i.e. base url
+
+userRouter    // It will execute the any type of request it wil encounter (get, post, etc)
+  .route('/')
+  .get(getUser)
+  .post(postUser)
+  .patch(patchUser)
+  .delete(deleteUser)
+
+
+
 app.get('/user', (req, res) => {
   res.send(user);
 })
@@ -41,23 +54,46 @@ app.get('/users/:id', (req, res) => {
 //   res.json(filteredData);
 // })
 
-app.get('/users', (req, res) => {
+
+//----------------------
+
+// app.get('/users', (req, res) => {
+//   let {name, age} = req.query;
+//   let filteredData = users.filter(userObj => {
+//     return (userObj.name == name && userObj.age == age)
+//   })
+//   res.json(filteredData);
+// })
+
+function getUser(req, res) {
   let {name, age} = req.query;
   let filteredData = users.filter(userObj => {
     return (userObj.name == name && userObj.age == age)
   })
   res.json(filteredData);
-})
+}
 
+//-------------------------
 
-app.post('/user',(req, res) => {
+// app.post('/user',(req, res) => {
+//   console.log(req.body);
+//   user = req.body;
+//   res.json({   // ham json format me bhejte he jisse pretty me dekh sake
+//     "message": "User is Received",
+//     "user": req.body
+//   })
+// })
+
+function postUser (req, res) {
   console.log(req.body);
   user = req.body;
   res.json({   // ham json format me bhejte he jisse pretty me dekh sake
     "message": "User is Received",
     "user": req.body
   })
-})
+}
+
+//-------------------------
 
 app.patch('/user', (req, res) => {
   const dataToBeUploaded = req.body;
@@ -70,6 +106,18 @@ app.patch('/user', (req, res) => {
   })
 })
 
+function patchUser (req, res) {
+  const dataToBeUploaded = req.body;
+  for(key in dataToBeUploaded) {
+    user[key] = dataToBeUploaded[key];
+  }
+  res.json({
+    "message" : "Data updated",
+    "user": user
+  })
+}
+
+//-------------------------
 app.delete('/user',(req, res) => {
   console.log(req.body);
   user = {};
@@ -77,4 +125,14 @@ app.delete('/user',(req, res) => {
     "message": "User is Deleted",
     "user": user
   }) })
-app.listen(5000);//
+
+function deleteUser (req, res) {
+  console.log(req.body);
+  user = {};
+  res.json({   
+    "message": "User is Deleted",
+    "user": user
+  }) }
+
+
+app.listen(5000);
