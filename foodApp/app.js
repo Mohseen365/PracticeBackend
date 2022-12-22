@@ -36,8 +36,8 @@ userRouter    // It will execute the any type of request it wil encounter (get, 
 
 authRouter
   .route('/signup')
-  .get()
-  .post()
+  .get(getSignup)
+  .post(postSignup)
 
 app.get('/user', (req, res) => {
   res.send(user);
@@ -79,6 +79,10 @@ function getUser(req, res) {
   res.json(filteredData);
 }
 
+function getSignup(req, res) {
+  res.sendFile("/public/index.html", {root: __dirname});
+  console.log('get axios');
+}
 //-------------------------
 
 // app.post('/user',(req, res) => {
@@ -99,6 +103,17 @@ function postUser (req, res) {
   })
 }
 
+function postSignup (req, res) {
+  let {email, name, password} = req.body;
+  console.log(req.body); //backend log will show in terminal
+  res.json({
+    message: "Data is received in backend",
+    email,
+    name,
+    password
+    
+  })
+}
 //-------------------------
 
 app.patch('/user', (req, res) => {
