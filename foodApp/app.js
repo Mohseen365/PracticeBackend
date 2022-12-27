@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
-app.use(express.json());// isse use krna padta he post req ko chalane ke liye
+const mongoose = require('mongoose');
+const db_link = require('./secrets');
+
+
+app.use(express.json());// ye json ko js object me convert krta he, isse use krna padta he put aur post req (f/d se server pr data aa rha he)ko chalane ke liye
 user = {};
 users = [
   {
@@ -29,7 +33,7 @@ app.use('/user',userRouter);//no need to add localhost i.e. base url
 
 userRouter    // It will execute the any type of request it wil encounter (get, post, etc)
   .route('/')
-  .get(getUser)
+  .get(middleware1, getUser, middleware2) // From these 3 fn only 1 can send response
   .post(postUser)
   .patch(patchUser)
   .delete(deleteUser)
@@ -70,13 +74,23 @@ app.get('/users/:id', (req, res) => {
 //   })
 //   res.json(filteredData);
 // })
+function middleware1(req, res, next) {
+  console.log("1 is called");
+  next();
+}
 
-function getUser(req, res) {
+function getUser(req, res, next) {
   let {name, age} = req.query;
   let filteredData = users.filter(userObj => {
     return (userObj.name == name && userObj.age == age)
   })
   res.json(filteredData);
+  next();
+}
+
+function middleware2(req, res) {
+  console.log("2 is called");
+  
 }
 
 function getSignup(req, res) {
@@ -157,3 +171,13 @@ function deleteUser (req, res) {
 
 
 app.listen(5000);
+
+
+mongoose.connect(db_link)
+    .then(function (db) {
+        console.log("db connected");
+        // console.log(db);
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
