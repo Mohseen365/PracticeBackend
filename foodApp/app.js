@@ -78,12 +78,14 @@ function middleware1(req, res, next) {
   next();
 }
 
-function getUser(req, res, next) {
-  let {name, age} = req.query;
-  let filteredData = users.filter(userObj => {
-    return (userObj.name == name && userObj.age == age)
-  })
-  res.json(filteredData);
+async function getUser(req, res, next) {
+  // let {name, age} = req.query;
+  // let filteredData = users.filter(userObj => {
+  //   return (userObj.name == name && userObj.age == age)
+  // })
+  let allUsers = await userModel.findOne({name:"Suresh"})
+  
+  res.json({ msg: "users retrieved", allUsers });
   next();
 }
 
