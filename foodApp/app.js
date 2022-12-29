@@ -3,7 +3,6 @@ const app = express();
 const mongoose = require('mongoose');
 const db_link = require('./secrets');
 
-
 app.use(express.json());// ye json ko js object me convert krta he, isse use krna padta he put aur post req (f/d se server pr data aa rha he)ko chalane ke liye
 user = {};
 users = [
