@@ -116,16 +116,22 @@ function postUser (req, res) {
   })
 }
 
-function postSignup (req, res) {
-  let {email, name, password} = req.body;
-  console.log(req.body); //backend log will show in terminal
+async function postSignup (req, res) {
+  // let {email, name, password} = req.body;
+  try {
+    console.log(req.body); //backend log will show in terminal
+  let data = req.body;
+  let user = await userModel.create(data);
   res.json({
-    message: "Data is received in backend",
-    email,
-    name,
-    password
+    message: "User Signed Up",
+    user
     
   })
+  } catch (err) {
+    res.json({
+      err:err.message
+    })
+  }
 }
 //-------------------------
 
@@ -206,14 +212,14 @@ const userSchema = mongoose.Schema({
 
 const userModel = mongoose.model("userModel", userSchema);
 
-(async function createUser() {
-  let user = {
-    name: "Suresh",
-    email: "Suresh@gmail.com",
-    password: "12345678",
-    confirmPassword: "12345678"
-  };
-  let data = await userModel.create(user);
-  console.log(data);
+// (async function createUser() {
+//   let user = {
+//     name: "Suresh",
+//     email: "Suresh@gmail.com",
+//     password: "12345678",
+//     confirmPassword: "12345678"
+//   };
+//   let data = await userModel.create(user);
+//   console.log(data);
 
-})();
+// })();
