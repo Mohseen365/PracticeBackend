@@ -3,7 +3,6 @@ const app = express();
 const mongoose = require('mongoose');
 const db_link = require('./secrets');
 
-
 app.use(express.json());// ye json ko js object me convert krta he, isse use krna padta he put aur post req (f/d se server pr data aa rha he)ko chalane ke liye
 user = {};
 users = [
@@ -181,3 +180,40 @@ mongoose.connect(db_link)
     .catch(function (err) {
         console.log(err);
     });
+
+
+const userSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minLength: 7,
+  },
+  confirmPassword: {
+    type: String,
+    required: true,
+    minLength: 7,
+  }
+});
+
+const userModel = mongoose.model("userModel", userSchema);
+
+(async function createUser() {
+  let user = {
+    name: "Suresh",
+    email: "Suresh@gmail.com",
+    password: "12345678",
+    confirmPassword: "12345678"
+  };
+  let data = await userModel.create(user);
+  console.log(data);
+
+})();
