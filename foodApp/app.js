@@ -78,12 +78,14 @@ function middleware1(req, res, next) {
   next();
 }
 
-function getUser(req, res, next) {
-  let {name, age} = req.query;
-  let filteredData = users.filter(userObj => {
-    return (userObj.name == name && userObj.age == age)
-  })
-  res.json(filteredData);
+async function getUser(req, res, next) {
+  // let {name, age} = req.query;
+  // let filteredData = users.filter(userObj => {
+  //   return (userObj.name == name && userObj.age == age)
+  // })
+  let allUsers = await userModel.findOne({name:"Suresh"})
+  
+  res.json({ msg: "users retrieved", allUsers });
   next();
 }
 
@@ -116,16 +118,22 @@ function postUser (req, res) {
   })
 }
 
-function postSignup (req, res) {
-  let {email, name, password} = req.body;
-  console.log(req.body); //backend log will show in terminal
+async function postSignup (req, res) {
+  // let {email, name, password} = req.body;
+  try {
+    console.log(req.body); //backend log will show in terminal
+  let data = req.body;
+  let user = await userModel.create(data);
   res.json({
-    message: "Data is received in backend",
-    email,
-    name,
-    password
+    message: "User Signed Up",
+    user
     
   })
+  } catch (err) {
+    res.json({
+      err:err.message
+    })
+  }
 }
 //-------------------------
 
@@ -140,14 +148,16 @@ app.patch('/user', (req, res) => {
   })
 })
 
-function patchUser (req, res) {
-  const dataToBeUploaded = req.body;
-  for(key in dataToBeUploaded) {
-    user[key] = dataToBeUploaded[key];
-  }
+async function patchUser (req, res) {
+  const dataToBeUpdated = req.body;
+  console.log(req.body);
+  // for(key in dataToBeUploaded) {
+  //   user[key] = dataToBeUploaded[key];
+  // }
+  let doc = await userModel.findOneAndUpdate({email: "Rajesh@gmail.com"}, dataToBeUpdated);
   res.json({
     "message" : "Data updated",
-    "user": user
+    // "user": user
   })
 }
 
@@ -160,12 +170,13 @@ app.delete('/user',(req, res) => {
     "user": user
   }) })
 
-function deleteUser (req, res) {
+async function deleteUser (req, res) {
   console.log(req.body);
-  user = {};
+  // user = {};
+  let doc = await userModel.findOneAndRemove({email: "Rajesh@gmail.com"})
   res.json({   
     "message": "User is Deleted",
-    "user": user
+    // "user": user
   }) }
 
 
@@ -206,14 +217,14 @@ const userSchema = mongoose.Schema({
 
 const userModel = mongoose.model("userModel", userSchema);
 
-(async function createUser() {
-  let user = {
-    name: "Suresh",
-    email: "Suresh@gmail.com",
-    password: "12345678",
-    confirmPassword: "12345678"
-  };
-  let data = await userModel.create(user);
-  console.log(data);
+// (async function createUser() {
+//   let user = {
+//     name: "Suresh",
+//     email: "Suresh@gmail.com",
+//     password: "12345678",
+//     confirmPassword: "12345678"
+//   };
+//   let data = await userModel.create(user);
+//   console.log(data);
 
-})();
+// })();
