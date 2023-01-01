@@ -148,14 +148,16 @@ app.patch('/user', (req, res) => {
   })
 })
 
-function patchUser (req, res) {
-  const dataToBeUploaded = req.body;
-  for(key in dataToBeUploaded) {
-    user[key] = dataToBeUploaded[key];
-  }
+async function patchUser (req, res) {
+  const dataToBeUpdated = req.body;
+  console.log(req.body);
+  // for(key in dataToBeUploaded) {
+  //   user[key] = dataToBeUploaded[key];
+  // }
+  let doc = await userModel.findOneAndUpdate({email: "Rajesh@gmail.com"}, dataToBeUpdated);
   res.json({
     "message" : "Data updated",
-    "user": user
+    // "user": user
   })
 }
 
@@ -168,12 +170,13 @@ app.delete('/user',(req, res) => {
     "user": user
   }) })
 
-function deleteUser (req, res) {
+async function deleteUser (req, res) {
   console.log(req.body);
-  user = {};
+  // user = {};
+  let doc = await userModel.findOneAndRemove({email: "Rajesh@gmail.com"})
   res.json({   
     "message": "User is Deleted",
-    "user": user
+    // "user": user
   }) }
 
 
