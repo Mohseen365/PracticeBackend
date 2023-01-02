@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
-const db_link = require('./secrets');
-const emailValidator = require('email-validator');
+const userModel = require('./models/userModel')
+
 
 app.use(express.json());// ye json ko js object me convert krta he, isse use krna padta he put aur post req (f/d se server pr data aa rha he)ko chalane ke liye
 user = {};
@@ -188,56 +187,6 @@ async function deleteUser (req, res) {
 app.listen(5000);
 
 
-mongoose.connect(db_link)
-    .then(function (db) {
-        console.log("db connected");
-        // console.log(db);
-    })
-    .catch(function (err) {
-        console.log(err);
-    });
-
-
-const userSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    // Schema request jane se pehle hi validate kr lega agar mongo db me validate krvate to request chli jati fir vo error thorw krta 
-    validate: function () {
-      return emailValidator.validate(this.email);
-    }
-  },
-  password: {
-    type: String,
-    required: true,
-    minLength: 7,
-  },
-  confirmPassword: {
-    type: String,
-    required: true,
-    minLength: 7,
-    validate: function () {
-      this.confirmPassword == this.password;
-    }
-  }
-});
-
-//hooks
-
-userSchema.pre('save', function () {
-  console.log('before saving in database pre hook');
-})
-userSchema.post('save', function() {
-  console.log('after saving in database post hook');
-})
-
-
-const userModel = mongoose.model("userModel", userSchema);
 
 // (async function createUser() {
 //   let user = {
