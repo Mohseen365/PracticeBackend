@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
-const db_link = require('./secrets');
+const userModel = require('./models/userModel')
+
 
 app.use(express.json());// ye json ko js object me convert krta he, isse use krna padta he put aur post req (f/d se server pr data aa rha he)ko chalane ke liye
 user = {};
@@ -123,12 +123,16 @@ async function postSignup (req, res) {
   try {
     console.log(req.body); //backend log will show in terminal
   let data = req.body;
+  console.log('in signup start');
+  //pre hook will be called
   let user = await userModel.create(data);
+  // post hook will be called
   res.json({
     message: "User Signed Up",
     user
     
   })
+  console.log('in signup end');
   } catch (err) {
     res.json({
       err:err.message
@@ -183,39 +187,6 @@ async function deleteUser (req, res) {
 app.listen(5000);
 
 
-mongoose.connect(db_link)
-    .then(function (db) {
-        console.log("db connected");
-        // console.log(db);
-    })
-    .catch(function (err) {
-        console.log(err);
-    });
-
-
-const userSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minLength: 7,
-  },
-  confirmPassword: {
-    type: String,
-    required: true,
-    minLength: 7,
-  }
-});
-
-const userModel = mongoose.model("userModel", userSchema);
 
 // (async function createUser() {
 //   let user = {
