@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const userModel = require('./models/userModel')
+const cookieParser = require('cookie-parser');
 
 
 app.use(express.json());// ye json ko js object me convert krta he, isse use krna padta he put aur post req (f/d se server pr data aa rha he)ko chalane ke liye
@@ -29,6 +30,7 @@ const authRouter = express.Router();
 
 app.use('/auth',authRouter);
 app.use('/user',userRouter);//no need to add localhost i.e. base url
+app.use(cookieParser);
 
 userRouter    // It will execute the any type of request it wil encounter (get, post, etc)
   .route('/')
@@ -36,6 +38,14 @@ userRouter    // It will execute the any type of request it wil encounter (get, 
   .post(postUser)
   .patch(patchUser)
   .delete(deleteUser)
+
+userRouter
+  .route('/setcookies')
+  .get(setCookies);
+
+userRouter
+  .route('/getcookies')
+  .get(getCookies)
 
 authRouter
   .route('/signup')
@@ -183,6 +193,21 @@ async function deleteUser (req, res) {
     // "user": user
   }) }
 
+
+function setCookies (req, res) {
+  res.cookie('isLoggedIn', true, {maxAge: 10000, secure:true}); //maxage is in milliseconds, secure means https
+  res.cookie('password', 1234567890, {secure:true});
+  res.send('cookies has been send');
+}
+
+function getCookies (req, res) {
+  let cookies = req.cookies;
+  console.log('OUTPUT : ', req.password);
+  console.log('req.cookies : ', cookies);
+  console.log('req.cookie : ', req.cookie);
+
+  res.send('Cookies received');
+}
 
 app.listen(5000);
 
