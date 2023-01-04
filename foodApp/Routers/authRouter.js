@@ -8,6 +8,9 @@ authRouter
   .get(getSignup)
   .post(postSignup)
 
+authRouter
+  .route('/login')
+  .post(loginUser)
 
 function getSignup(req, res) {
   res.sendFile("/public/index.html", {root: __dirname});
@@ -32,6 +35,35 @@ async function postSignup (req, res) {
   } catch (err) {
     res.json({
       err:err.message
+    })
+  }
+}
+
+async function loginUser (req, res) {
+  try {
+    let {email, password} = req.body;
+    let user = await userModel.findOne({email: email});
+    if (user) {
+      //bcrypt - compare 
+      if (password == user.password) {
+        res.json({
+          msg: "Successful login"
+        })
+      }
+      else {
+        res.json({
+          msg: "Wrong Credentials"
+        })
+      }
+    }
+    else {
+      res.json({
+        msg: "User does not exist"
+      })
+    }
+  } catch (error) {
+    res.json({
+      msg: error.message
     })
   }
 }
