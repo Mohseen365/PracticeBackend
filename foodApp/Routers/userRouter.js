@@ -6,7 +6,7 @@ const userRouter = express.Router(); //we use this so that we can use function f
 
 userRouter    // It will execute the any type of request it wil encounter (get, post, etc)
   .route('/')
-  .get(middleware1, getUser, middleware2) // From these 3 fn only 1 can send response
+  .get(protectRoute, getUser) // From these 3 fn only 1 can send response
   .post(postUser)
   .patch(patchUser)
   .delete(deleteUser)
@@ -20,9 +20,15 @@ userRouter
   .get(getCookies)
 
 
-function middleware1(req, res, next) {
-  console.log("1 is called");
-  next();
+function protectRoute(req, res, next) {
+  if (req.cookies.isLoggedIn) {
+    next();
+  }
+  else {
+    res.json({
+      msg: "Operation not allowed"
+    })
+  }
 }
 
 async function getUser(req, res, next) {
@@ -36,10 +42,7 @@ async function getUser(req, res, next) {
   next();
 }
 
-function middleware2(req, res) {
-  console.log("2 is called");
-  
-}
+
 
 function postUser (req, res) {
   console.log(req.body);
