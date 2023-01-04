@@ -50,14 +50,14 @@ userSchema.pre('save', function () {
   this.confirmPassword = undefined;
 })
 
-userSchema.pre('save', async function () {
-  let salt = await bcrypt.genSalt();
-  console.log('salt : ', salt);
-  let hashedString = await bcrypt.hash(this.password, salt);
-  this.password = hashedString;
-  console.log('hashedString : ', hashedString);
+// userSchema.pre('save', async function () {
+//   let salt = await bcrypt.genSalt();
+//   console.log('salt : ', salt);
+//   let hashedString = await bcrypt.hash(this.password, salt);
+//   this.password = hashedString;
+//   console.log('hashedString : ', hashedString);
 
-})
+// })
 
 userSchema.post('save', function() {
   console.log('after saving in database post hook');
