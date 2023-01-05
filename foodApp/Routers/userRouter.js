@@ -1,6 +1,9 @@
 const express = require('express');
 const userModel = require('../models/userModel')
 
+var jwt = require("jsonwebtoken");
+const JWT_KEY='zdsfxcg234w5e6cg'
+
 // We will use mounting which will me created for each route (mini app)
 const userRouter = express.Router(); //we use this so that we can use function for get,post,etc
 
@@ -21,8 +24,14 @@ userRouter
 
 
 function protectRoute(req, res, next) {
-  if (req.cookies.isLoggedIn) {
-    next();
+  if (req.cookies.login) {
+    let token = req.cookies.login; // we are taking token from user browser
+    let isVerified = jwt.verify(token, JWT_KEY);
+    // console.log('isVerified : ', isVerified);
+    if (isVerified) {
+      next();
+    }
+    
   }
   else {
     res.json({

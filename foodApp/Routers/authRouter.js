@@ -1,6 +1,9 @@
 const express = require('express');
 const userModel = require('../models/userModel')
 
+var jwt = require("jsonwebtoken");
+const JWT_KEY='zdsfxcg234w5e6cg'; //anything randomly
+
 const authRouter = express.Router();
 
 authRouter
@@ -46,7 +49,9 @@ async function loginUser (req, res) {
     if (user) {
       //bcrypt - compare 
       if (password == user.password) {
-        res.cookie('isLoggedIn', true);
+        let uid = user["_id"]; //unique id used to make token
+        let token = jwt.sign({payload: uid}, JWT_KEY); // we had made token and we will give it to users so that we can uniquely recognise them later
+        res.cookie('login', token); // give token to user
         res.json({
           msg: "Successful login"
         })
