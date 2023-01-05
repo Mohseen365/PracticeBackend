@@ -2,7 +2,7 @@ const express = require('express');
 const userModel = require('../models/userModel')
 
 var jwt = require("jsonwebtoken");
-const JWT_KEY='zdsfxcg234w5e6cg'; //anything randomly
+const {JWT_KEY}=require('../secrets'); //anything randomly
 
 const authRouter = express.Router();
 
