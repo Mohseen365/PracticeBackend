@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const db_link = require('../secrets');
+const {db_link} = require('../secrets');
 const emailValidator = require('email-validator');
 const bcrypt = require('bcrypt')
 
@@ -40,6 +40,15 @@ const userSchema = mongoose.Schema({
     validate: function () {
       this.confirmPassword == this.password;
     }
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'user', 'restaurantowner', 'deliveryboy'], //checks if the value is given in an array
+    default: 'user'
+  },
+  profileImage: {
+    type: String,
+    default: 'img/users/default.img'
   }
 });
 
@@ -59,9 +68,9 @@ userSchema.pre('save', function () {
 
 // })
 
-userSchema.post('save', function() {
-  console.log('after saving in database post hook');
-})
+// userSchema.post('save', function() {
+//   console.log('after saving in database post hook');
+// })
 
 
 const userModel = mongoose.model("userModel", userSchema);
