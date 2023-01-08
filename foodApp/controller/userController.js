@@ -16,13 +16,13 @@ module.exports.getUser = async function (req, res) {
 }
 
 
-module.exports.getAllUsers = async function (req, res) {
+module.exports.allUser = async function (req, res) {
   
   try {
-    let allUsers = await userModel.find()
+    let users = await userModel.find()
     res.json({   
       "message": "All Users are Retrieved",
-      "allUsers": allUsers
+      "allUsers": users
     })
   } catch (err) {
     res.json({
@@ -32,11 +32,13 @@ module.exports.getAllUsers = async function (req, res) {
 }
 
 
+
+
 module.exports.updateUser = async function (req, res) {
   
   try {
     const id = req.params.id;
-    const dataToBeUpdated = req.body;
+    const dataToBeUploaded = req.body;
     const user = await userModel.findById(id);
     if (user) {
       keys = [];
