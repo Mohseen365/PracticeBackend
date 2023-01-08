@@ -1,10 +1,24 @@
 const express = require('express');
-
-const {protectRoute} = require('../helper');
-const {getUser, getAllUser, updateUser, deleteUser} = require('../controller/userController');
-
-
 const userRouter = express.Router();
+
+const {protectRoute, isAuthorised} = require('../helper');
+const {getUser, getAllUser, updateUser, deleteUser} = require('../controller/userController');
+const {signup, login} = require('../controller/authController')
+
+
+userRouter
+  .route('/signup')
+  .get(signup)
+
+userRouter
+  .route('/login')
+  .get(login)
+
+  //profile page
+userRouter.use(protectRoute);
+userRouter
+  .route('/userProfile')
+  .get(getUser);
 
 //options for user
 userRouter    
@@ -12,13 +26,8 @@ userRouter
   .patch(updateUser)
   .delete(deleteUser)
 
-  //profile page
-app.use(protectRoute);
-userRouter
-  .route('/userProfile')
-  .get(getUser);
-
-app.use(isAuthorised['admin'])
+  //admin specific function
+userRouter.use(isAuthorised['admin'])
 userRouter
   .route('')
   .get(getAllUser)
