@@ -3,8 +3,8 @@ const userModel = require('../models/userModel')
 
 module.exports.getUser = async function (req, res) {
   try {
-    const id = req.params.id;
-    let user = await userModel.findById({name:"Suresh"})
+    const id = req.id;
+    let user = await userModel.findById(id)
     
     res.json({ msg: "user retrieved", user });
   } catch (err) {
