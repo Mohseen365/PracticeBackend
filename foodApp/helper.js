@@ -28,11 +28,11 @@ module.exports.protectRoute = async function (req, res, next) {
 module.exports.isAuthorised = function (roles) {
   return function (req, res, next) {
     let role = req.role;
-    if (roles.included(role)) {
+    if (roles.includes(role)) {
       next();
     } else {
       res.status(401).json({
-        msg: "Operation not required"
+        msg: "Invalid Role Operation not required"
       });
     }
   }

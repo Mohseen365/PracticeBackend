@@ -2,23 +2,17 @@ const express = require('express');
 const userRouter = express.Router();
 
 const {protectRoute, isAuthorised} = require('../helper');
-const {getUser, getAllUser, updateUser, deleteUser} = require('../controller/userController');
+const {getUser, allUser, updateUser, deleteUser} = require('../controller/userController');
 const {signup, login} = require('../controller/authController')
 
 
 userRouter
   .route('/signup')
-  .get(signup)
+  .post(signup)
 
 userRouter
   .route('/login')
-  .get(login)
-
-  //profile page
-userRouter.use(protectRoute);
-userRouter
-  .route('/userProfile')
-  .get(getUser);
+  .post(login)
 
 //options for user
 userRouter    
@@ -26,14 +20,19 @@ userRouter
   .patch(updateUser)
   .delete(deleteUser)
 
-  //admin specific function
-userRouter.use(isAuthorised['admin'])
+  //profile page
+userRouter.use(protectRoute);
 userRouter
-  .route('')
-  .get(getAllUser)
+  .route('/profile')
+  .get(getUser);
 
 
 
+  //admin specific function
+userRouter.use(isAuthorised(['admin'])); //error aayi thi because isAut.. me () lagana bhul gya tha
+userRouter
+  .route('/')
+  .get(allUser)
 
 
 
