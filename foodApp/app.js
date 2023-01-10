@@ -12,6 +12,7 @@ const authRouter = require('./Routers/authRouter');
 app.use('/auth',authRouter);
 app.use('/user',userRouter);//no need to add localhost i.e. base url
 
+const planModel = require('./models/planModel')
 
 app.listen(5000);
 
