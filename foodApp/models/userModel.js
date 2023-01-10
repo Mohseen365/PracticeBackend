@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const {db_link} = require('../secrets');
 const emailValidator = require('email-validator');
 const bcrypt = require('bcrypt')
-
+const uuidv4 = require("uuid");
 
 mongoose.connect(db_link)
     .then(function (db) {
-        console.log("db connected");
+        console.log("User db connected");
         // console.log(db);
     })
     .catch(function (err) {
@@ -49,7 +49,8 @@ const userSchema = mongoose.Schema({
   profileImage: {
     type: String,
     default: 'img/users/default.img'
-  }
+  },
+  resetToken: String
 });
 
 //hooks
@@ -72,6 +73,17 @@ userSchema.pre('save', function () {
 //   console.log('after saving in database post hook');
 // })
 
+userSchema.methods.createResetToken = function () {
+  const resetToken = uuidv4();
+  this.resetToken = resetToken;
+  return resetToken;
+}
+
+userSchema.methods.resetPasswordHandler  = function (password, confirmPassword) {
+  this.password = password;
+  this.confirmPassword = confirmPassword;
+  this.resetToken = undefined;
+}
 
 const userModel = mongoose.model("userModel", userSchema);
 

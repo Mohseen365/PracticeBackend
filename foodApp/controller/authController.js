@@ -61,3 +61,57 @@ module.exports.login = async function (req, res) {
     })
   }
 }
+
+module.exports.forgetpassword = async function (req, res) {
+  try {
+    let email = req.body;
+    const user = await userModel.findOne({email: email});
+    if (user) {
+      //resetToken
+      const resetToken = user.createResetToken();
+      //create link 
+      //https://xyz.com/resetPassword/resetToken
+      let resetPasswordLink = `${req.protocol}://${req.get('host')}/resetpassword/${resetToken}`;
+      //send email to user
+      //nodemailer
+    } else {
+      res.json({
+        msg:'user not found'
+      })
+    }
+  } catch (err) {
+    res.status(500).json({
+      msg: err.message
+    });
+  }
+}
+
+module.exports.resetpassword  = async function (req, res) {
+  try {
+    let token = req.params.token; //token in route
+    let {password, confirmPassword} = req.body;
+    const user = await userModel.findOne({resetToken: token});
+    if (user) {
+      user.resetPasswordHandler(password, confirmPassword);
+      await user.save();
+      res.json({
+        msg: "Password changed successfully"
+      });
+    } else {
+      res.json({
+        msg: "user not found"
+      })
+    }
+  } catch (error) {
+    res.json({
+      msg: error.message
+    });
+  }
+}
+
+module.exports.logout = function (req, res) {
+  res.cookie('login', ' ', {maxAge: 1});
+  res.json({
+    msg: "Logged out successfully"
+  })
+}
