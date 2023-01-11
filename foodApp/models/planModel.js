@@ -39,16 +39,16 @@ mongoose
 const planModel = mongoose.model("planModel", planSchema);
 module.exports = planModel;
 
-(async function createPlan() {
-    let plan = {
-        name: "Superfood",
-        duration: 3,
-        price:5,
-        ratingsAverage: 3.8,
-        discount: 10
-    }
-    let data = await planModel.create(plan);
-    console.log(data);
-    // const doc = new planModel(plan);
-    // await doc.save();
-})();
+// (async function createPlan() {
+//     let plan = {
+//         name: "Superfood",
+//         duration: 3,
+//         price:5,
+//         ratingsAverage: 3.8,
+//         discount: 10
+//     }
+//     let data = await planModel.create(plan);
+//     console.log(data);
+//     // const doc = new planModel(plan);
+//     // await doc.save();
+// })();

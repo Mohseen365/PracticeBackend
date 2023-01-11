@@ -7,12 +7,11 @@ app.use(express.json());// ye json ko js object me convert krta he, isse use krn
 app.use(cookieParser());
 
 const userRouter = require('./Routers/userRouter');
-const authRouter = require('./Routers/authRouter');
+const planRouter = require('./Routers/planRouter');
 
-app.use('/auth',authRouter);
+app.use('/plan',planRouter);
 app.use('/user',userRouter);//no need to add localhost i.e. base url
 
-const planModel = require('./models/planModel')
 
 app.listen(5000);
 
