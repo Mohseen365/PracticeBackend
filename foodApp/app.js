@@ -8,8 +8,10 @@ app.use(cookieParser());
 
 const userRouter = require('./Routers/userRouter');
 const planRouter = require('./Routers/planRouter');
+const reviewRouter = require('./Routers/reviewRouter');
 
 app.use('/plan',planRouter);
+app.use('/review',reviewRouter);
 app.use('/user',userRouter);//no need to add localhost i.e. base url
 
 

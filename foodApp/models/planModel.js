@@ -32,8 +32,14 @@ mongoose
         }, 'discount cannot be 100%']
     },
     ratingsAverage: {
-        type: Number
-    }
+        type: Number,
+        // default:0
+    },
+    // nor: { //no of reviews
+    //     type: Number,
+    //     default:0
+    // }
+    
 });
 
 const planModel = mongoose.model("planModel", planSchema);
