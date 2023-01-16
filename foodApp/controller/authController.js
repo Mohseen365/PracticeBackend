@@ -1,6 +1,7 @@
 const userModel = require('../models/userModel')
 var jwt = require("jsonwebtoken");
-const {JWT_KEY}=require('../secrets'); 
+const {JWT_KEY} = require('../secrets'); 
+const {sendMail} = require('../utility/nodemailer'); 
 
 module.exports.signup = async function  (req, res) {
   // let {email, name, password} = req.body;
@@ -68,12 +69,16 @@ module.exports.forgetpassword = async function (req, res) {
     const user = await userModel.findOne({email: email});
     if (user) {
       //resetToken
-      const resetToken = user.createResetToken();
+      const resetToken = await user.createResetToken();
       //create link 
       //https://xyz.com/resetPassword/resetToken
-      let resetPasswordLink = `${req.protocol}://${req.get('host')}/resetpassword/${resetToken}`;
-      //send email to user
-      //nodemailer
+      let resetPasswordLink = `${req.protocol}://${req.get('host')}/user/resetpassword/${resetToken}`;
+      
+      await sendMail("signup", user);
+
+      res.json({
+        msg:"email sent successfully"
+      });
     } else {
       res.json({
         msg:'user not found'
@@ -93,6 +98,7 @@ module.exports.resetpassword  = async function (req, res) {
     const user = await userModel.findOne({resetToken: token});
     if (user) {
       user.resetPasswordHandler(password, confirmPassword);
+      await sendMail("forgetpassword",{email,resetPasswordLink});
       await user.save();
       res.json({
         msg: "Password changed successfully"
