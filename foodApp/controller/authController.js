@@ -14,6 +14,7 @@ module.exports.signup = async function  (req, res) {
   // post hook will be called
 
   if (user) {
+    await sendMail("signup", user);
     res.json({
       message: "User Signed Up",
       user     
@@ -65,7 +66,8 @@ module.exports.login = async function (req, res) {
 
 module.exports.forgetpassword = async function (req, res) {
   try {
-    let email = req.body;
+    let email = req.body.email;
+    console.log(email);
     const user = await userModel.findOne({email: email});
     if (user) {
       //resetToken
@@ -73,9 +75,11 @@ module.exports.forgetpassword = async function (req, res) {
       //create link 
       //https://xyz.com/resetPassword/resetToken
       let resetPasswordLink = `${req.protocol}://${req.get('host')}/user/resetpassword/${resetToken}`;
+      // console.log('resetPasswordLink : ', resetPasswordLink);
       
-      await sendMail("signup", user);
-
+      // await sendMail("signup", user);
+      // console.log('sendMail : ');
+      await sendMail("forgetpassword",{email,resetPasswordLink});
       res.json({
         msg:"email sent successfully"
       });
@@ -98,7 +102,6 @@ module.exports.resetpassword  = async function (req, res) {
     const user = await userModel.findOne({resetToken: token});
     if (user) {
       user.resetPasswordHandler(password, confirmPassword);
-      await sendMail("forgetpassword",{email,resetPasswordLink});
       await user.save();
       res.json({
         msg: "Password changed successfully"
